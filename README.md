@@ -1,9 +1,7 @@
 - 👋 Hi, I’m @armboost
 - 👀 I’m interested in learning how to build a webpage.
 - 🌱 I’m currently learning a little of everything. 
-- 💞️ I’m looking to collaborate on projects that involve automating tasks.
 - 📫 How to reach me k_martinho@proton.me.  
-- 😄 Pronouns: Him/He
 - ⚡ Fun fact: This is my first time using GitHub!
 
 <!---
