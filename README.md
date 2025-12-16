@@ -1,8 +1,7 @@
 - 👋 Hi, I’m @armboost
-- 👀 I’m interested in learning how to build a webpage.
-- 🌱 I’m currently learning a little of everything. 
+- 👀 Committed to continuous learning in cybersecurity — staying current with emerging threats and evolving security practices.
+- 🌱 I’m currently pursuing CompTIA Network+ to complete my IT Support Specialist certification pathway. 
 - 📫 How to reach me k_martinho@proton.me.  
-- ⚡ Fun fact: This is my first time using GitHub!
 
 <!---
 armboost/armboost is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
