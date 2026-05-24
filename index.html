@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kevin Martinho — Cybersecurity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0e13;
+    --surface: #111820;
+    --surface2: #1a2330;
+    --border: #1e2d3d;
+    --accent: #00d4ff;
+    --accent2: #00ff9d;
+    --accent3: #ff6b35;
+    --text: #c9d8e8;
+    --text-muted: #5a7a99;
+    --text-dim: #3a5a78;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  .scanline {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,212,255,0.015) 2px,
+      rgba(0,212,255,0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 0 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .terminal-prefix {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+  }
+
+  .name {
+    font-family: var(--mono);
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 2.2rem;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .title-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    display: inline-block;
+    padding: 2px 10px;
+    margin-top: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+
+  .cert-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+  }
+
+  .cert-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    border: 1px solid;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .cert-pill.active   { border-color: var(--accent2); color: var(--accent2); }
+  .cert-pill.pending  { border-color: var(--text-dim); color: var(--text-muted); }
+  .cert-pill.clearance { border-color: var(--accent3); color: var(--accent3); }
+
+  .contact-bar {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .contact-bar a { color: var(--accent); text-decoration: none; }
+  .contact-bar a:hover { color: #fff; }
+  .contact-bar .sep { color: var(--text-dim); }
+
+  /* SECTIONS */
+  section { margin-bottom: 2.5rem; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* SUMMARY */
+  .summary-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.75;
+    max-width: 720px;
+    border-left: 2px solid var(--accent);
+    padding-left: 1.25rem;
+  }
+
+  /* SKILL GRID */
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+  }
+
+  .skill-card-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent2);
+    letter-spacing: 0.12em;
+    margin-bottom: 0.6rem;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+  }
+
+  /* EXPERIENCE */
+  .exp-item {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    margin-bottom: 12px;
+  }
+
+  .exp-header {
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .exp-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .exp-org {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .exp-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent3);
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  .exp-body {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .exp-body ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .exp-body li {
+    font-size: 13px;
+    color: var(--text);
+    padding-left: 1.2rem;
+    position: relative;
+    line-height: 1.55;
+  }
+
+  .exp-body li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-family: var(--mono);
+  }
+
+  /* PROJECTS */
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .project-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  .project-desc {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 0.25rem;
+  }
+
+  .project-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+
+  /* TRAINING */
+  .training-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+  }
+
+  .training-row:last-child { border-bottom: none; }
+
+  .training-name {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .training-org {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--mono);
+  }
+
+  .training-year {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  /* STATUS BAR */
+  .status-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 6px 2rem;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    z-index: 100;
+  }
+
+  .status-item span.ok   { color: var(--accent2); }
+  .status-item span.warn { color: var(--accent3); }
+
+  /* FADE IN */
+  .fade-in {
+    animation: fadeIn 0.5s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .header-top { flex-direction: column; }
+    .cert-stack { align-items: flex-start; }
+    .status-bar { gap: 1rem; font-size: 9px; }
+    .name { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<div class="container">
+
+  <header class="fade-in">
+    <div class="header-top">
+      <div class="name-block">
+        <div class="terminal-prefix">$ whoami</div>
+        <div class="name">Kevin Martinho<span class="cursor"></span></div>
+        <div class="title-tag">SOC ANALYST — TIER 1</div>
+      </div>
+      <div class="cert-stack">
+        <div class="cert-pill clearance">&#9650; FORMER PUBLIC TRUST CLEARANCE</div>
+        <div class="cert-pill active">&#10003; GIAC GCTI &mdash; 2024</div>
+        <div class="cert-pill active">&#10003; CompTIA Security+ &mdash; 2023</div>
+        <div class="cert-pill active">&#10003; CompTIA A+</div>
+        <div class="cert-pill pending">&#8634; CompTIA Network+ &mdash; Summer 2026</div>
+      </div>
+    </div>
+    <div class="contact-bar">
+      <span>Falls Church, VA</span>
+      <span class="sep">|</span>
+      <span>240-495-1542</span>
+      <span class="sep">|</span>
+      <a href="mailto:k_martinho@proton.me">k_martinho@proton.me</a>
+      <span class="sep">|</span>
+      <a href="https://linkedin.com/in/kevinmartinho" target="_blank" rel="noopener">linkedin.com/in/kevinmartinho</a>
+      <span class="sep">|</span>
+      <a href="https://github.com/armboost" target="_blank" rel="noopener">github.com/armboost</a>
+    </div>
+  </header>
+
+  <section class="fade-in">
+    <div class="section-label">// profile</div>
+    <p class="summary-text">
+      Security analyst with CompTIA Security+, GIAC GCTI, and hands-on lab experience in SIEM monitoring, log analysis, and threat intelligence. Federal contract background with Public Trust clearance, CAC credentials, and ServiceNow experience directly applicable to SOC incident workflows. Accepted into DEAFCYBER 2026 &mdash; a competitive 12-month mentored program for DHH cybersecurity professionals. Actively closing gaps: Network+ expected Summer 2026. Not looking for an entry-level placeholder &mdash; looking for a team running a real mission.
+    </p>
+  </section>
+
+  <section class="fade-in">
+    <div class="section-label">// technical stack</div>
+    <div class="skill-grid">
+
+      <div class="skill-card">
+        <div class="skill-card-label">SIEM &amp; LOG ANALYSIS</div>
+        <div class="skill-tags">
+          <span class="tag">Splunk</span>
+          <span class="tag">SPL queries</span>
+          <span class="tag">Wazuh</span>
+          <span class="tag">alert triage</span>
+          <span class="tag">false-positive ID</span>
+          <span class="tag">incident docs</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-label">THREAT INTELLIGENCE</div>
+        <div class="skill-tags">
+          <span class="tag">MITRE ATT&amp;CK</span>
+          <span class="tag">TTP mapping</span>
+          <span class="tag">Cyber Kill Chain</span>
+          <span class="tag">adversary profiling</span>
+          <span class="tag">CTI reporting</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-label">NETWORK &amp; TRAFFIC</div>
+        <div class="skill-tags">
+          <span class="tag">Wireshark</span>
+          <span class="tag">TCP/IP</span>
+          <span class="tag">pfSense</span>
+          <span class="tag">VLAN/NAT</span>
+          <span class="tag">OpenVPN</span>
+          <span class="tag">IPsec</span>
+          <span class="tag">traceroute</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-label">ENDPOINT &amp; OS</div>
+        <div class="skill-tags">
+          <span class="tag">Windows Event Viewer</span>
+          <span class="tag">Sysinternals</span>
+          <span class="tag">Kali Linux</span>
+          <span class="tag">bash</span>
+          <span class="tag">Active Directory</span>
+          <span class="tag">BitLocker</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-label">ITSM &amp; DOCUMENTATION</div>
+        <div class="skill-tags">
+          <span class="tag">ServiceNow</span>
+          <span class="tag">ticket tracking</span>
+          <span class="tag">escalation protocols</span>
+          <span class="tag">federal doc standards</span>
+          <span class="tag">SLA awareness</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-label">CLOUD &amp; VIRTUALIZATION</div>
+        <div class="skill-tags">
+          <span class="tag">AWS EC2/S3</span>
+          <span class="tag">Docker</span>
+          <span class="tag">VMware</span>
+          <span class="tag">cloud-adjacent monitoring</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="fade-in">
+    <div class="section-label">// experience</div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <div>
+          <div class="exp-title">Financial Systems Modernization Specialist</div>
+          <div class="exp-org">Skookum Contract Services (Tessera) &mdash; Savage Mills, MD</div>
+        </div>
+        <div class="exp-date">Aug 2023 &ndash; Mar 2025</div>
+      </div>
+      <div class="exp-body">
+        <ul>
+          <li>Held Public Trust clearance and CAC credentials on a federal government contract with enforced access controls, audit trails, and security protocols.</li>
+          <li>Used ServiceNow to log, track, and manage my own work tickets within a federal contract environment operating under strict access controls and documentation standards.</li>
+          <li>Produced structured technical reports documenting system events, vulnerabilities, and configurations per federal documentation standards.</li>
+          <li>Followed established escalation channels for technical incidents and compliance issues across a multi-stakeholder federal environment.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-header">
+        <div>
+          <div class="exp-title">Language Acquisition Specialist</div>
+          <div class="exp-org">The Chimes School &mdash; Baltimore, MD</div>
+        </div>
+        <div class="exp-date">Jun 2025 &ndash; Present</div>
+      </div>
+      <div class="exp-body">
+        <ul>
+          <li>Configure, troubleshoot, and document assistive technology devices in a compliance-driven environment requiring precise technical recordkeeping.</li>
+          <li>Maintain structured written documentation of observations and interventions aligned with regulatory requirements.</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="fade-in">
+    <div class="section-label">// projects &mdash; github.com/armboost</div>
+    <div class="project-grid">
+
+      <div class="project-card">
+        <div class="project-name">SIEM MONITORING &amp; IR LAB</div>
+        <div class="project-desc">Deployed Wazuh for endpoint monitoring; built Splunk dashboards and SPL queries to detect phishing indicators, account compromise, and lateral movement. Produced structured incident reports following evidence preservation procedures.</div>
+        <div class="project-tags">
+          <span class="project-tag">Splunk</span>
+          <span class="project-tag">Wazuh</span>
+          <span class="project-tag">ClamAV</span>
+          <span class="project-tag">IR workflow</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-name">THREAT INTEL &amp; ATT&amp;CK MAPPING</div>
+        <div class="project-desc">Mapped adversary TTPs to MITRE ATT&amp;CK and Cyber Kill Chain phases in written threat intelligence reports. CTFs: Mail n&#8217; Trail, One of Us, Imperial Memory &mdash; each requiring log analysis, artifact examination, and written technical documentation.</div>
+        <div class="project-tags">
+          <span class="project-tag">MITRE ATT&amp;CK</span>
+          <span class="project-tag">CTF</span>
+          <span class="project-tag">threat reporting</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-name">NETWORK TRAFFIC ANALYSIS LAB</div>
+        <div class="project-desc">Diagnosed connectivity issues using Wireshark alongside ping, traceroute, and nslookup. Configured VLANs, NAT, and encrypted VPN tunnels (OpenVPN, IPsec) using Cisco IOS CLI; built working knowledge of network segmentation relevant to SOC monitoring.</div>
+        <div class="project-tags">
+          <span class="project-tag">Wireshark</span>
+          <span class="project-tag">pfSense</span>
+          <span class="project-tag">OpenVPN</span>
+          <span class="project-tag">Cisco IOS</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="fade-in">
+    <div class="section-label">// education &amp; training</div>
+
+    <div class="training-row">
+      <div>
+        <div class="training-name">B.A. Linguistics &amp; History</div>
+        <div class="training-org">University of Southern Maine</div>
+      </div>
+      <div class="training-year">2014</div>
+    </div>
+
+    <div class="training-row">
+      <div>
+        <div class="training-name">Cybersecurity Bootcamp</div>
+        <div class="training-org">RIT Global Cybersecurity Institute</div>
+      </div>
+      <div class="training-year">2022</div>
+    </div>
+
+    <div class="training-row">
+      <div>
+        <div class="training-name">IR Expert &amp; CyberAdvantage</div>
+        <div class="training-org">IronCircle | NTID</div>
+      </div>
+      <div class="training-year">2025</div>
+    </div>
+
+    <div class="training-row">
+      <div>
+        <div class="training-name">DEAFCYBER 2026 Cohort</div>
+        <div class="training-org">12-month mentored program &mdash; ~15 DHH cybersecurity professionals &mdash; employer Hiring Village at Month 6</div>
+      </div>
+      <div class="training-year">2026</div>
+    </div>
+
+  </section>
+
+</div>
+
+<div class="status-bar">
+  <span class="status-item">STATUS: <span class="ok">OPEN TO WORK</span></span>
+  <span class="status-item">LOCATION: <span class="ok">Falls Church, VA</span></span>
+  <span class="status-item">CLEARANCE: <span class="warn">FORMER PUBLIC TRUST</span></span>
+  <span class="status-item">NETWORK+: <span class="warn">IN PROGRESS &mdash; SUMMER 2026</span></span>
+</div>
+
+</body>
+</html>
