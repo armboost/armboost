@@ -1,7 +1,7 @@
 - 👋 Hi, I’m @armboost
 - 👀 Committed to continuous learning in cybersecurity — staying current with emerging threats and evolving security practices.
 - 🌱 I’m currently pursuing CompTIA Network+ to complete my IT Support Specialist certification pathway.
-- 🌐 https://armboost.github.io/armboost/
+- 🌐 https://armboost.github.io
 - 📫 How to reach me k_martinho@proton.me
 
 <!---
